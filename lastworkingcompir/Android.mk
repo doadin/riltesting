@@ -1,6 +1,6 @@
 # Copyright 2006 The Android Open Source Project
 
-ifneq ($(BOARD_PROVIDES_LIBRIL),true)
+ifeq ($(BOARD_PROVIDES_LIBRIL),true)
 
 LOCAL_PATH:= $(call my-dir)
 include $(CLEAR_VARS)
@@ -17,17 +17,17 @@ LOCAL_SHARED_LIBRARIES := \
     libhardware_legacy \
     librilutils
 
-#LOCAL_CFLAGS := -DANDROID_MULTI_SIM -DDSDA_RILD1
-
-ifeq ($(SIM_COUNT), 2)
-    LOCAL_CFLAGS += -DANDROID_SIM_COUNT_2
+ifneq ($(filter xmm6262 xmm6360,$(BOARD_MODEM_TYPE)),)
+LOCAL_CFLAGS := -DMODEM_TYPE_XMM6262
+endif
+ifeq ($(BOARD_MODEM_TYPE),xmm6260)
+LOCAL_CFLAGS := -DMODEM_TYPE_XMM6260
+endif
+ifeq ($(BOARD_MODEM_TYPE),xmm7260)
+LOCAL_CFLAGS := -DMODEM_TYPE_XMM7260
 endif
 
 LOCAL_MODULE:= libril
-
-ifeq ($(BOARD_USES_LEGACY_RIL),true)
-LOCAL_CFLAGS += -DLEGACY_RIL
-endif
 
 include $(BUILD_SHARED_LIBRARY)
 
@@ -45,7 +45,12 @@ LOCAL_STATIC_LIBRARIES := \
     libcutils \
     librilutils_static
 
-LOCAL_CFLAGS :=
+ifneq ($(filter xmm6262 xmm6360,$(BOARD_MODEM_TYPE)),)
+LOCAL_CFLAGS := -DMODEM_TYPE_XMM6262
+endif
+ifeq ($(BOARD_MODEM_TYPE),xmm6260)
+LOCAL_CFLAGS := -DMODEM_TYPE_XMM6260
+endif
 
 LOCAL_MODULE:= libril_static
 
